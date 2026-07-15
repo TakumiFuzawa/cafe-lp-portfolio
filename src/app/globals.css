@@ -1,26 +1,70 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+/*
+ * デザイントークン
+ * 生成り(cream)ベース + 深緑(pine)+ 焦茶(cocoa)のナチュラル配色。
+ * 本文系の色はベージュ背景上でコントラスト比 4.5:1 以上を確保。
+ */
+@theme {
+  --color-cream: #faf6f0;
+  --color-cream-dark: #f0e8db;
+  --color-pine: #3e5c4b;
+  --color-pine-dark: #2d4437;
+  --color-cocoa: #5c4633;
+  --color-ink: #2b2723;
+  --color-muted: #5f574c;
+
+  /*
+   * 日本語Webフォントは分割サブセットでも数百KBありLCPを大きく悪化させるため、
+   * 各OSの高品質な日本語フォントをそのまま使う(フォント転送量ゼロ)。
+   */
+  --font-sans:
+    "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN", "Hiragino Sans",
+    "BIZ UDPGothic", Meiryo, sans-serif;
+  --font-serif:
+    "Hiragino Mincho ProN", "Yu Mincho", "BIZ UDPMincho", "Noto Serif JP",
+    serif;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html {
+  scroll-behavior: smooth;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background-color: var(--color-cream);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+}
+
+/* 固定ヘッダー分だけアンカー位置をずらす */
+section[id] {
+  scroll-margin-top: 4.5rem;
+}
+
+/* スクロール連動フェードイン(FadeIn コンポーネントが .is-visible を付与) */
+.fade-in {
+  opacity: 0;
+  transform: translateY(1.25rem);
+  transition:
+    opacity 0.7s ease-out,
+    transform 0.7s ease-out;
+  transition-delay: var(--fade-delay, 0s);
+}
+
+.fade-in.is-visible {
+  opacity: 1;
+  transform: none;
+}
+
+/* アニメーションを好まないユーザーには最初から表示する */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  .fade-in {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
 }
